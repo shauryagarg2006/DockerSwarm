@@ -96,14 +96,16 @@ Run the following command to initiate a cluster
 docker swarm init --advertise-addr 192.168.33.10
 ```
 This will give you a command to add more nodes to this cluster. Copy that command: 
-Command will look something like this.
+Command should look like this.
 ```
 docker swarm join \
     --token SWMTKN-1-0otmrb2ufyj8w7qltgajyjth4niapgkh93brcll4bc4wc8ceqn-6mqdppru3adp6a56o9rgnzpar \
     192.168.33.10:2377
 ```
 
-Now lets start another vagrant machine (with private ip `192.168.33.20`) using the commands mentioned above. Install docker on it. We will refer to this new VM as Slave and the first one as Manager.
+Now lets start another vagrant machine (with private ip `192.168.33.20`).   
+Use the commands mentioned above to install docker on it.  
+We will refer to this new VM as Slave and the first one as Manager.
 
 Run the copied command on the Slave machine. This adds the slave to our cluster.
 
@@ -156,14 +158,16 @@ docker tag localhost:5000/ncsu:latest localhost:5000/ncsu:current
 docker service update --image localhost:5000/ncsu:current node-app  
 ```
 
-Now if you go and make repeated calls to `http://192.168.33.10:3000/`. You will slowly start seeing all the Hello's slowing getting changed to Hola's  
-Our Rolling update is under progress with no down time.
+Now if you go and make repeated calls to `http://192.168.33.10:3000/`.  
+You will slowly start seeing all the Hello's slowing getting changed to Hola's  
+*Our Rolling update is under progress with no down time.*
 
 ### Orchestration
 
 There are several tools that help assist in combining several containers under one configuration scheme.
 
 * http://decking.io/
+* [Docker Swarm](https://docs.docker.com/engine/swarm/)
 * [fig](http://www.fig.sh/)
 * [Docker Compose](https://docs.docker.com/compose/)
 
