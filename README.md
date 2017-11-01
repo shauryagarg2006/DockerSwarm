@@ -88,7 +88,8 @@ docker pull localhost:5000/ncsu:latest
 docker tag localhost:5000/ncsu:latest localhost:5000/ncsu:current
 ```
 
-##### Docker Swarm Cluster
+#### Docker Swarm Cluster
+![Architecture Design](Architecture.png)  
 Run the following command to initiate a cluster
 
 ```
@@ -108,8 +109,10 @@ Run the copied command on the Slave machine. This adds the slave to our cluster.
 
 Run the following commands on the manager
 ```
-docker node ls
+docker node ls 
 ```
+##### Creating A Service
+
 Lets run our app as a service on this cluster. 
 ```
 docker service create --replicas 1 --name node-app -p 3000:8080 --update-delay 10s --update-parallelism 1 localhost:5000/ncsu:current
@@ -139,8 +142,6 @@ docker build -t ncsu-app .
 docker tag ncsu-app localhost:5000/ncsu:latest
 docker push localhost:5000/ncsu:latest
 ```
-
-
 
 A script like this can run after a git hook or deploy command. The server will pull from registery, perform a rolling update.
 
