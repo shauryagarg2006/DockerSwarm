@@ -117,7 +117,11 @@ Lets run our app as a service on this cluster.
 ```
 docker service create --replicas 1 --name node-app -p 3000:8080 --update-delay 10s --update-parallelism 1 localhost:5000/ncsu:current
 ```
-There are several important parameters in the above coommand. We are telling how many replicas/container we want for this application and name of the service and which image to use for this service. We will be updating the service after 10s delay and updating only one image at a time.
+There are several important parameters in the above coommand. 
+- `--name` sets name of the service.
+- `--update-delay` sets delay between updating each container.
+- `--update-parallelism` sets how many containers to update at the same time.
+- Last parameter is the name of the docker image we want to use
 
 Run the following command to ger more details about the serivice.
 ```
