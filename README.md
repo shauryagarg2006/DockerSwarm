@@ -89,6 +89,7 @@ docker tag localhost:5000/ncsu:latest localhost:5000/ncsu:current
 ```
 
 #### Docker Swarm Cluster
+##### Architecture
 ![Architecture Design](Architecture.png)  
 Run the following command to initiate a cluster
 
