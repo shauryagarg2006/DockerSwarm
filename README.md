@@ -127,9 +127,6 @@ cat <<EOT >> daemon.json
 }
 EOT
 ```
-```
-sudo mv daemon.json /etc/docker/daemon.json
-```
 Move the dameon.json to correct folder and restart docker service.  
 ```
 sudo mv daemon.json /etc/docker/daemon.json
