@@ -24,7 +24,7 @@ sudo apt-get install -y docker.io
 sudo usermod -aG docker $(whoami)
 ```
 Logout from shell and relogin to use docker. Run `docker run hello-world` to verify if docker is correctly working.
-
+###### Note: You might face issues if you are using trusty instead of xenial
 ##### Registry
 Making the repository run in insecure mode so that its accessible from out side.
 Create daemon.json file
