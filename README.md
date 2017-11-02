@@ -26,6 +26,18 @@ sudo usermod -aG docker $(whoami)
 Logout from shell and relogin to use docker. Run `docker run hello-world` to verify if docker is correctly working.
 
 ##### Registry
+Making the repository run in insecure mode so that its accessible from out side.
+Create daemon.json file
+```
+cat <<EOT >> daemon.json
+{
+ "insecure-registries" : ["192.168.33.10:5000"]
+}
+EOT
+```
+```
+sudo mv daemon.json /etc/docker/daemon.json
+```
 
 Start a private registery on port 5000.
 
@@ -75,17 +87,17 @@ curl -i localhost:50100
 If successful, can deploy to a private registery.
 
 ```
-docker tag ncsu-app localhost:5000/ncsu:latest
-docker push localhost:5000/ncsu:latest
+docker tag ncsu-app 192.168.33.10:5000/ncsu:latest
+docker push 192.168.33.10:5000/ncsu:latest
 ```
 You can check images in registry using the following command
 ```
-curl -X GET http://localhost:5000/v2/_catalog
+curl -X GET http://192.168.33.10:5000/v2/_catalog
 ```
 Pulling the image from registry
 ```
-docker pull localhost:5000/ncsu:latest
-docker tag localhost:5000/ncsu:latest localhost:5000/ncsu:current
+docker pull 192.168.33.10:5000/ncsu:latest
+docker tag 192.168.33.10:5000/ncsu:latest 192.168.33.10:5000/ncsu:current
 ```
 
 #### Docker Swarm Cluster
@@ -105,10 +117,23 @@ docker swarm join \
 ```
 
 Now lets start another vagrant machine (with private ip `192.168.33.20`).   
-Use the commands mentioned above to install docker on it.  
+Use the commands mentioned above to install docker on it.(No need to run registry)  
 We will refer to this new VM as Slave and the first one as Manager.
 
-Run the copied command on the Slave machine. This adds the slave to our cluster.
+Adding information about insecure registry  
+Create daemon.json file
+```
+cat <<EOT >> daemon.json
+{
+ "insecure-registries" : ["192.168.33.10:5000"]
+}
+EOT
+```
+```
+sudo mv daemon.json /etc/docker/daemon.json
+```
+
+Run the copied command(swarm join) on the Slave machine. This adds the slave to our cluster.
 
 Run the following commands on the manager
 ```
@@ -118,7 +143,7 @@ docker node ls
 
 Lets run our app as a service on this cluster. 
 ```
-docker service create --replicas 1 --name node-app -p 3000:8080 --update-delay 10s --update-parallelism 1 localhost:5000/ncsu:current
+docker service create --replicas 1 --name node-app -p 3000:8080 --update-delay 10s --update-parallelism 1 192.168.33.10:5000/ncsu:current
 ```
 There are several important parameters in the above coommand. 
 - `--name` sets name of the service.
@@ -146,17 +171,16 @@ Let us now build and push the new image to registry
 ```
 cd App
 docker build -t ncsu-app .
-docker tag ncsu-app localhost:5000/ncsu:latest
-docker push localhost:5000/ncsu:latest
+docker tag ncsu-app 192.168.33.10:5000/ncsu:latest
+docker push 192.168.33.10:5000/ncsu:latest
 ```
 
 A script like this can run after a git hook or deploy command. The server will pull from registery, perform a rolling update.
 
 ```
-docker pull localhost:5000/ncsu:latest  
-docker rmi localhost:5000/ncsu:current  
-docker tag localhost:5000/ncsu:latest localhost:5000/ncsu:current
-docker service update --image localhost:5000/ncsu:current node-app  
+docker pull 192.168.33.10:5000/ncsu:latest    
+docker tag 192.168.33.10:5000/ncsu:latest 192.168.33.10:5000/ncsu:current
+docker service update --image 192.168.33.10:5000/ncsu:current node-app  
 ```
 
 Now if you go and make repeated calls to `http://192.168.33.10:3000/`.  
