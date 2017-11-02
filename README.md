@@ -170,14 +170,14 @@ Let us now build and push the new image to registry
 ```
 cd App
 docker build -t ncsu-app .
-docker tag ncsu-app 192.168.33.10:5000/ncsu:latest
-docker push 192.168.33.10:5000/ncsu:latest
+docker tag ncsu-app 192.168.33.10:5000/ncsu:v2
+docker push 192.168.33.10:5000/ncsu:v2
 ```
 
 Service Update. Docker Swarm will pull from registery, perform a rolling update.
 
 ```
-docker service update --image 192.168.33.10:5000/ncsu:latest node-app  
+docker service update --image 192.168.33.10:5000/ncsu:v2 node-app  
 ```
 
 Now if you go and make repeated calls to `http://192.168.33.10:3000/`.  
