@@ -19,7 +19,7 @@ Run the container and ssh into it and install docker.
 ```
 vagrant up
 vagrant ssh
-sudo apt-get install -y update
+sudo apt-get update -y
 sudo apt-get install -y docker.io
 sudo usermod -aG docker $(whoami)
 ```
